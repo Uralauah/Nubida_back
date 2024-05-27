@@ -1,7 +1,7 @@
 package com.example.Nubida.JWT;
 
 import com.example.Nubida.CustomUser.CustomUserDetails;
-import com.example.Nubida.Traveler.Traveler;
+import com.example.Nubida.Entity.Traveler;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

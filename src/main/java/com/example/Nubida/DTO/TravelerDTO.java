@@ -1,4 +1,4 @@
-package com.example.Nubida.Traveler;
+package com.example.Nubida.DTO;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -53,6 +53,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth)->auth
                         .requestMatchers("/traveler/register","/login","/").permitAll()
+                        .requestMatchers("/country/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http

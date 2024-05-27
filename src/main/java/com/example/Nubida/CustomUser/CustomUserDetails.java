@@ -1,12 +1,11 @@
 package com.example.Nubida.CustomUser;
 
-import com.example.Nubida.Traveler.Traveler;
+import com.example.Nubida.Entity.Traveler;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
     private final Traveler traveler;
@@ -32,6 +31,9 @@ public class CustomUserDetails implements UserDetails {
         return traveler.getPassword();
     }
 
+    public String getNickname(){
+        return traveler.getNickname();
+    }
     @Override
     public String getUsername() {
         return traveler.getUsername();
