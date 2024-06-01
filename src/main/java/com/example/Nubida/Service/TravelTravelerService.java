@@ -3,18 +3,33 @@ package com.example.Nubida.Service;
 import com.example.Nubida.Entity.Travel;
 import com.example.Nubida.Entity.TravelTraveler;
 import com.example.Nubida.Entity.Traveler;
+import com.example.Nubida.Repository.TravelRepository;
 import com.example.Nubida.Repository.TravelTravelerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TravelTravelerService {
     private final TravelTravelerRepository travelTravelerRepository;
-    public void join(Travel travel, Traveler traveler){
-        TravelTraveler tt = new TravelTraveler();
-        tt.setTraveler(traveler);
-        tt.setTravel(travel);
-        travelTravelerRepository.save(tt);
+    private final TravelService travelService;
+    private final TravelRepository travelRepository;
+
+    public void delete(Traveler traveler){
+        List<TravelTraveler> travelTravelers = travelTravelerRepository.findAllByTraveler(traveler);
+        for(TravelTraveler travelTraveler : travelTravelers){
+            Travel travel = travelTraveler.getTravel();
+            if(travel.getLeader()==traveler.getId()){
+                travelService.delete(travel.getId());
+            }
+            else{
+                travel.setNum_traveler(travel.getNum_traveler()-1);
+                travelRepository.save(travel);
+            }
+            travelTravelerRepository.delete(travelTraveler);
+        }
     }
 }

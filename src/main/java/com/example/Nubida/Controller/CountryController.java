@@ -64,4 +64,17 @@ public class CountryController {
     public  List<RecommendCountryDTO> getRecommend(){
         return countryService.getRecommendCountry();
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody CountryDTO countryDTO){
+        int result = countryService.delete(countryDTO);
+        switch (result){
+            case -1:
+                return ResponseEntity.badRequest().body("국가 정보를 확인할 수 없습니다.");
+            case 200:
+                return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
+            default:
+                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        }
+    }
 }

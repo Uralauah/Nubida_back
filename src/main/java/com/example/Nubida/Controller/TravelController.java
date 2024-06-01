@@ -79,13 +79,13 @@ public class TravelController {
     }
 
     @GetMapping("/allInfo")
-    public Travel allInfo(@RequestParam(name = "id") int id) {
+    public Travel allInfo(@RequestParam(name = "id") long id) {
 
         return travelService.allInfo(id);
     }
 
     @GetMapping("/traveler")
-    public List<Traveler> viewTravelTravler(@RequestParam(name = "id") int id) {
+    public List<Traveler> viewTravelTravler(@RequestParam(name = "id") long id) {
         return travelService.viewTravelTraveler(id);
     }
 
@@ -109,7 +109,7 @@ public class TravelController {
     }
 
     @PostMapping("/setNum")
-    public void setNum(@RequestParam(name = "id") int id, @RequestParam(name = "num") int num) {
+    public void setNum(@RequestParam(name = "id") long id, @RequestParam(name = "num") int num) {
         travelService.setNum(id, num);
 
     }
@@ -129,22 +129,22 @@ public class TravelController {
     }
 
     @GetMapping("/supply/getAll")
-    public List<Supply> getAllSupply(@RequestParam(name = "id") int travel_id) {
+    public List<Supply> getAllSupply(@RequestParam(name = "id") long travel_id) {
         return travelService.getAllSupply(travel_id);
     }
 
     @PostMapping("/supply/check")
-    public void check(@RequestParam(name = "id") int travel_id, @RequestBody SupplyDTO supplyDTO) {
+    public void check(@RequestParam(name = "id") long travel_id, @RequestBody SupplyDTO supplyDTO) {
         travelService.supplyCheck(travel_id, supplyDTO);
     }
 
     @PostMapping("/supply/count")
-    public void count(@RequestParam(name = "id") int travel_id, @RequestBody SupplyDTO supplyDTO) {
+    public void count(@RequestParam(name = "id") long travel_id, @RequestBody SupplyDTO supplyDTO) {
         travelService.supplyCount(travel_id, supplyDTO);
     }
 
     @PostMapping("/supply/delete")
-    public ResponseEntity<?> delete(@RequestParam(name="id")int travel_id,@RequestBody SupplyDTO supplyDTO){
+    public ResponseEntity<?> delete(@RequestParam(name="id")long travel_id,@RequestBody SupplyDTO supplyDTO){
         int result = travelService.supplyDelete(travel_id,supplyDTO);
         switch(result){
             case -1:
@@ -159,12 +159,12 @@ public class TravelController {
     }
 
     @GetMapping("/viewReview")
-    public ReviewDTO viewReview(@RequestParam(name="id")int travel_id,Principal principal){
+    public ReviewDTO viewReview(@RequestParam(name="id")long travel_id,Principal principal){
         return travelService.viewReview(travel_id,principal);
     }
 
     @PostMapping("/budget")
-    public ResponseEntity<?> budget(@RequestParam(name="id")int travel_id,@RequestBody BudgetDTO budget){
+    public ResponseEntity<?> budget(@RequestParam(name="id")long travel_id,@RequestBody BudgetDTO budget){
         int result = travelService.addBudget(travel_id, budget);
         switch (result){
             case -1:
@@ -177,7 +177,7 @@ public class TravelController {
     }
 
     @PostMapping("/addTransport")
-    public ResponseEntity<?> addTransport(@RequestParam(name="id")int travel_id, @RequestBody TransportationDTO transportationDTO){
+    public ResponseEntity<?> addTransport(@RequestParam(name="id")long travel_id, @RequestBody TransportationDTO transportationDTO){
         int result = travelService.addTransportation(travel_id, transportationDTO);
         switch (result){
             case -1:
@@ -192,7 +192,7 @@ public class TravelController {
     }
 
     @PostMapping("/quit")
-    public ResponseEntity<?> quit(@RequestParam(name="id")int travel_id, Principal principal){
+    public ResponseEntity<?> quit(@RequestParam(name="id")long travel_id, Principal principal){
         int result = travelService.quit(principal,travel_id);
         switch (result){
             case -1:

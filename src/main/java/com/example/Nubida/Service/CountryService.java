@@ -3,14 +3,10 @@ package com.example.Nubida.Service;
 import com.example.Nubida.DTO.CountryDTO;
 import com.example.Nubida.DTO.RecommendCountryDTO;
 import com.example.Nubida.DTO.ReviewDTO;
-import com.example.Nubida.Entity.Country;
-import com.example.Nubida.Repository.CountryRepository;
-import com.example.Nubida.Entity.CountryReview;
-import com.example.Nubida.Repository.CountryReviewRepository;
-import com.example.Nubida.Entity.Review;
-import com.example.Nubida.Entity.Travel;
-import com.example.Nubida.Repository.TravelRepository;
+import com.example.Nubida.Entity.*;
+import com.example.Nubida.Repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +22,10 @@ public class CountryService {
     private final CountryRepository countryRepository;
     private final CountryReviewRepository countryReviewRepository;
     private final ReviewService reviewService;
+    @Lazy
     private final TravelRepository travelRepository;
+    private final ReviewRepository reviewRepository;
+    private final TravelService travelService;
     public int create(CountryDTO countryDTO){
         Optional<Country> optionalCountry = countryRepository.findByName(countryDTO.getName());
         if(optionalCountry.isPresent())
@@ -51,7 +50,7 @@ public class CountryService {
         return oc.get();
     }
 
-    public int addReview(int id, ReviewDTO reviewDTO, Principal principal){
+    public int addReview(long id, ReviewDTO reviewDTO, Principal principal){
         Review review = reviewService.create(reviewDTO,principal,id);
         Optional<Travel>ot = travelRepository.findById(id);
         if(ot.isEmpty())
@@ -91,5 +90,24 @@ public class CountryService {
             recommendCountryDTOS.add(recommendCountryDTO);
         }
         return recommendCountryDTOS;
+    }
+
+    public int delete(CountryDTO countryDTO){
+        Optional<Country> oc = countryRepository.findByName(countryDTO.getName());
+        if(oc.isEmpty())
+            return -1;
+        Country country = oc.get();
+        List<Travel> travels = travelRepository.findAllByDestination(country);
+        for(Travel travel : travels){
+            travelService.delete(travel.getId());
+        }
+        List<CountryReview> countryReviews = countryReviewRepository.findAllByCountry(country);
+        for(CountryReview countryReview : countryReviews){
+            Review review = countryReview.getReview();
+            countryReviewRepository.delete(countryReview);
+            reviewRepository.delete(review);
+        }
+        countryRepository.delete(country);
+        return 200;
     }
 }

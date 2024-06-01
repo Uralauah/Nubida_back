@@ -20,7 +20,7 @@ public class PlanService {
     private final PlanRepository planRepository;
     private final TravelRepository travelRepository;
     private final TravelPlanRepository travelPlanRepository;
-    public int addPlan(int travel_id, PlanDTO planDTO){
+    public int addPlan(long travel_id, PlanDTO planDTO){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return -1;
@@ -40,7 +40,7 @@ public class PlanService {
         return 200;
     }
 
-    public List<Plan> getPlans(int travel_id){
+    public List<Plan> getPlans(long travel_id){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return null;

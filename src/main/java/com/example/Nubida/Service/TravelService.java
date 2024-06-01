@@ -27,7 +27,7 @@ public class TravelService {
     private final TravelerRepository travelerRepository;
     private final CountryRepository countryRepository;
     private final TravelTravelerRepository travelTravelerRepository;
-    private final TravelTravelerService travelTravelerService;
+//    private final TravelTravelerService travelTravelerService;
     private final SupplyService supplyService;
     private final TravelSupplyService travelSupplyService;
     private final TravelSupplyRepository travelSupplyRepository;
@@ -35,7 +35,6 @@ public class TravelService {
     private final TransportationRepository transportationRepository;
     private final TravelTransportationRepository travelTransportationRepository;
     private final TravelPlanRepository travelPlanRepository;
-    private final CountryReviewRepository countryReviewRepository;
     private final ReviewRepository reviewRepository;
 
     public Travel create(TravelDTO travelDTO, Principal principal) {
@@ -64,27 +63,27 @@ public class TravelService {
             travel.setDestination(country);
         }
         travelRepository.save(travel);
-        travelTravelerService.join(travel, traveler);
+//        travelTravelerService.join(travel, traveler);
+        TravelTraveler travelTraveler = new TravelTraveler();
+        travelTraveler.setTraveler(traveler);
+        travelTraveler.setTravel(travel);
+        travelTravelerRepository.save(travelTraveler);
         return travel;
     }
 
-    public int delete(int id){
+    public int delete(long id){
         Optional<Travel> ot = travelRepository.findById(id);
         if(ot.isEmpty())
             return -1;
         Travel travel = ot.get();
         List<TravelSupply> travelSupplies =  travelSupplyRepository.findAllByTravel(travel);
-        for(TravelSupply travelSupply : travelSupplies)
-            travelSupplyRepository.delete(travelSupply);
+        travelSupplyRepository.deleteAll(travelSupplies);
         List<TravelTraveler> travelTravelerList = travelTravelerRepository.findAllByTravel(travel);
-        for(TravelTraveler travelTraveler : travelTravelerList)
-            travelTravelerRepository.delete(travelTraveler);
+        travelTravelerRepository.deleteAll(travelTravelerList);
         List<TravelPlan> travelPlans = travelPlanRepository.findAllByTravel(travel);
-        for(TravelPlan travelPlan : travelPlans)
-            travelPlanRepository.delete(travelPlan);
+        travelPlanRepository.deleteAll(travelPlans);
         List<TravelTransportation> travelTransportations = travelTransportationRepository.findAllByTravel(travel);
-        for(TravelTransportation travelTransportation: travelTransportations)
-            travelTransportationRepository.delete(travelTransportation);
+        travelTransportationRepository.deleteAll(travelTransportations);
         travelRepository.delete(travel);
         return 200;
     }
@@ -107,7 +106,10 @@ public class TravelService {
 
         travel.setNum_traveler(travel.getNum_traveler() + 1);
         travelRepository.save(travel);
-        travelTravelerService.join(travel, traveler);
+        TravelTraveler travelTraveler = new TravelTraveler();
+        travelTraveler.setTraveler(traveler);
+        travelTraveler.setTravel(travel);
+        travelTravelerRepository.save(travelTraveler);
         return 200;
     }
 
@@ -149,14 +151,14 @@ public class TravelService {
         return traveler;
     }
 
-    public Travel allInfo( int id) {
+    public Travel allInfo( long id) {
 
         Optional<Travel> ot = travelRepository.findById(id);
         return ot.orElse(null);
     }
 
 
-    public List<Traveler> viewTravelTraveler(int id) {
+    public List<Traveler> viewTravelTraveler(long id) {
         Optional<Travel> ot = travelRepository.findById(id);
         if (ot.isEmpty())
             return null;
@@ -169,7 +171,7 @@ public class TravelService {
         return travelers;
     }
 
-    public int deleteTraveler(Principal principal, int travel_id, long travel_traveler_id) {
+    public int deleteTraveler(Principal principal, long travel_id, long travel_traveler_id) {
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if (ot.isEmpty())
             return -1;
@@ -198,7 +200,7 @@ public class TravelService {
         return 200;
     }
 
-    public void setNum(int id, int num) {
+    public void setNum(long id, int num) {
         Optional<Travel> ot = travelRepository.findById(id);
         if (ot.isEmpty())
             return;
@@ -207,7 +209,7 @@ public class TravelService {
         travelRepository.save(travel);
     }
 
-    public int createSupply(int travel_id, SupplyDTO supplyDTO) {
+    public int createSupply(long travel_id, SupplyDTO supplyDTO) {
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if (ot.isEmpty())
             return -1;
@@ -217,7 +219,7 @@ public class TravelService {
         return 200;
     }
 
-    public List<Supply> getAllSupply(int travel_id){
+    public List<Supply> getAllSupply(long travel_id){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return null;
@@ -226,7 +228,7 @@ public class TravelService {
         return supplyService.getAllSupply(travelSupplies);
     }
 
-    public void supplyCheck(int travel_id, SupplyDTO supplyDTO){
+    public void supplyCheck(long travel_id, SupplyDTO supplyDTO){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return;
@@ -239,7 +241,7 @@ public class TravelService {
         supplyRepository.save(supply);
     }
 
-    public void supplyCount(int travel_id, SupplyDTO supplyDTO){
+    public void supplyCount(long travel_id, SupplyDTO supplyDTO){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return;
@@ -252,7 +254,7 @@ public class TravelService {
         supplyRepository.save(supply);
     }
 
-    public int supplyDelete(int travel_id, SupplyDTO supplyDTO){
+    public int supplyDelete(long travel_id, SupplyDTO supplyDTO){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return -1;
@@ -269,7 +271,7 @@ public class TravelService {
         return -2;
     }
 
-    public ReviewDTO viewReview(int travel_id,Principal principal){
+    public ReviewDTO viewReview(long travel_id,Principal principal){
         Optional<Traveler> ott = travelerRepository.findByUsername(principal.getName());
         if(ott.isEmpty())
             return null;
@@ -291,7 +293,7 @@ public class TravelService {
         return null;
     }
 
-    public int addBudget(int travel_id, BudgetDTO budget){
+    public int addBudget(long travel_id, BudgetDTO budget){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return -1;
@@ -303,7 +305,7 @@ public class TravelService {
         return 200;
     }
 
-    public int addTransportation(int travel_id, TransportationDTO transportationDTO){
+    public int addTransportation(long travel_id, TransportationDTO transportationDTO){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return -1;
@@ -322,7 +324,7 @@ public class TravelService {
         return 200;
     }
 
-    public int quit(Principal principal, int travel_id){
+    public int quit(Principal principal, long travel_id){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return -1;

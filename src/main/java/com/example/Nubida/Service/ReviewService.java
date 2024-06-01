@@ -22,7 +22,7 @@ public class ReviewService {
     private final CountryReviewRepository countryReviewRepository;
     private final CountryRepository    countryRepository;
 
-    public Review create(ReviewDTO reviewDTO, Principal principal, int travel_id){
+    public Review create(ReviewDTO reviewDTO, Principal principal, long travel_id){
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
         if(ot.isEmpty())
             return null;
@@ -110,5 +110,12 @@ public class ReviewService {
         reviewRepository.save(review);
         countryRepository.save(country);
         return 200;
+    }
+
+    public void deleteByAuthor(Traveler traveler){
+        List<Review> reviews = reviewRepository.findAllByAuthor(traveler);
+        for(Review review : reviews){
+            delete(review.getId());
+        }
     }
 }

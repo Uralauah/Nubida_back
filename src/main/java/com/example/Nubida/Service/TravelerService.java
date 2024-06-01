@@ -16,6 +16,8 @@ import java.util.Optional;
 public class TravelerService {
     private final TravelerRepository travelerRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ReviewService reviewService;
+    private final TravelTravelerService travelTravelerService;
     public int create(TravelerDTO newuser){
         Traveler traveler = new Traveler();
         Optional<Traveler> ot = this.travelerRepository.findByUsername(newuser.getUsername());
@@ -53,5 +55,16 @@ public class TravelerService {
         if(!traveler.getRole().equals("ROLE_ADMIN"))
             return null;
         return travelerRepository.findAll();
+    }
+
+    public int delete(TravelerDTO travelerDTO){
+        Optional<Traveler> ot = travelerRepository.findByUsername(travelerDTO.getUsername());
+        if(ot.isEmpty())
+            return -1;
+        Traveler traveler = ot.get();
+        reviewService.deleteByAuthor(traveler);
+        travelTravelerService.delete(traveler);
+        travelerRepository.delete(traveler);
+        return 200;
     }
 }
