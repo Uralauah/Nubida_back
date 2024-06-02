@@ -25,8 +25,8 @@ public class CountryController {
     private final ReviewService reviewService;
 
     @PostMapping("/admin/create")
-    public ResponseEntity<?> create(@RequestBody CountryDTO countryDTO) {
-        int result = countryService.create(countryDTO);
+    public ResponseEntity<?> createCountry(@RequestBody CountryDTO countryDTO) {
+        int result = countryService.createCountry(countryDTO);
         switch (result) {
             case -1:
                 return ResponseEntity.badRequest().body("이미 존재하는 국가입니다.");
@@ -37,9 +37,9 @@ public class CountryController {
         }
     }
 
-    @GetMapping("/allCountry")
-    public List<Country> allCountry() {
-        return countryService.allCountry();
+    @GetMapping("/getAllCountry")
+    public List<Country> getAllCountry() {
+        return countryService.getAllCountry();
     }
 
     @GetMapping("/getCountry")
@@ -50,13 +50,13 @@ public class CountryController {
 
 
     @GetMapping("/getRecommend")
-    public  List<RecommendCountryDTO> getRecommend(){
+    public  List<RecommendCountryDTO> getRecommendCountry(){
         return countryService.getRecommendCountry();
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody CountryDTO countryDTO){
-        int result = countryService.delete(countryDTO);
+    public ResponseEntity<?> deleteCountry(@RequestBody CountryDTO countryDTO){
+        int result = countryService.deleteCountry(countryDTO);
         switch (result){
             case -1:
                 return ResponseEntity.badRequest().body("국가 정보를 확인할 수 없습니다.");

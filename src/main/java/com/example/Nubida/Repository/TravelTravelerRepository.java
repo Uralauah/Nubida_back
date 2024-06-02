@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface TravelTravelerRepository extends JpaRepository<TravelTraveler,Long> {
     List<TravelTraveler> findAllByTravel(Travel travel);
-//    void deleteTravelTravelerBy(Traveler traveler);
     List<TravelTraveler> findAllByTravelerId(Long id);
     List<TravelTraveler> findAllByTravelId(Long id);
     List<TravelTraveler> findAllByTraveler(Traveler traveler);

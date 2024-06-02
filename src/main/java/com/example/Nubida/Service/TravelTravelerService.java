@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class TravelTravelerService {
         List<TravelTraveler> travelTravelers = travelTravelerRepository.findAllByTraveler(traveler);
         for(TravelTraveler travelTraveler : travelTravelers){
             Travel travel = travelTraveler.getTravel();
-            if(travel.getLeader()==traveler.getId()){
-                travelService.delete(travel.getId());
+            if(Objects.equals(travel.getLeader(), traveler.getId())){
+                travelService.deleteTravel(travel.getId());
             }
             else{
                 travel.setNum_traveler(travel.getNum_traveler()-1);

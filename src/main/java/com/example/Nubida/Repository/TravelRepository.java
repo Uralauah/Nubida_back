@@ -11,6 +11,5 @@ public interface TravelRepository extends JpaRepository<Travel,Long> {
     List<Travel> findAllByLeader(long leader_id);
     Optional<Travel> findByCode(String code);
     Optional<Travel> findByName(String name);
-//    Optional<Travel> findById(int id);
     List<Travel> findAllByDestination(Country country);
 }

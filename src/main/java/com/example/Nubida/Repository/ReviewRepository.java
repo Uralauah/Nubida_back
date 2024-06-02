@@ -11,9 +11,4 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByAuthor(Traveler traveler);
-
-    @Query("SELECT r FROM Review r ORDER BY r.id DESC")
-    List<Review> findTopByOrderByIdDesc(Pageable pageable);
-
-
 }

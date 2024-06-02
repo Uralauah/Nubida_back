@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +30,23 @@ public class SupplyService {
             supplies.add(travelSupply.getSupply());
         }
         return supplies;
+    }
+
+    public void supplyChangeCheck(SupplyDTO supplyDTO){
+        Optional<Supply> os = supplyRepository.findByName(supplyDTO.getName());
+        if (os.isEmpty())
+            return;
+        Supply supply = os.get();
+        supply.setCheck(supplyDTO.isCheck());
+        supplyRepository.save(supply);
+    }
+
+    public void supplyChangeCount(SupplyDTO supplyDTO){
+        Optional<Supply> os = supplyRepository.findByName(supplyDTO.getName());
+        if(os.isEmpty())
+            return;
+        Supply supply = os.get();
+        supply.setCount(supply.getCount()+supplyDTO.getCount());
+        supplyRepository.save(supply);
     }
 }

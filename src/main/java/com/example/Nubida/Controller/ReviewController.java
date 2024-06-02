@@ -18,49 +18,38 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/getAll")
-    public List<ReviewDTO> getAll(Principal principal){
-        return reviewService.getAll(principal);
+    public List<ReviewDTO> getAllReviews(Principal principal){
+        return reviewService.getAllReviews(principal);
     }
 
     @PostMapping("/addReview")
     public ResponseEntity<?> addReview(@RequestParam(name = "id") int id, @RequestBody ReviewDTO reviewDTO,Principal principal) {
         int result = reviewService.addReview(id, reviewDTO,principal);
-        switch (result) {
-            case -1:
-                return ResponseEntity.badRequest().body("해당 국가를 찾을 수 없습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 추가되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("해당 국가를 찾을 수 없습니다.");
+            case 200 -> ResponseEntity.ok().body("성공적으로 추가되었습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody ReviewDTO reviewDTO){
-        int result = reviewService.delete(reviewDTO.getId());
-        switch (result){
-            case -1:
-                return ResponseEntity.badRequest().body("리뷰 정보를 확인할 수 없습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+    public ResponseEntity<?> deleteReview(@RequestBody ReviewDTO reviewDTO){
+        int result = reviewService.deleteReview(reviewDTO.getId());
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("리뷰 정보를 확인할 수 없습니다.");
+            case 200 -> ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
-    @PostMapping("/change")
-    public ResponseEntity<?> change(@RequestBody ReviewDTO reviewDTO){
-        int result = reviewService.change(reviewDTO);
-        switch (result){
-            case -1:
-                return ResponseEntity.badRequest().body("리뷰 정보를 확인할 수 없습니다.");
-            case -2:
-                return ResponseEntity.badRequest().body("리뷰 정보를 확인할 수 없습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 수정되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+    @PostMapping("/modify")
+    public ResponseEntity<?> modifyReview(@RequestBody ReviewDTO reviewDTO){
+        int result = reviewService.modifyReview(reviewDTO);
+        return switch (result) {
+            case -1, -2 -> ResponseEntity.badRequest().body("리뷰 정보를 확인할 수 없습니다.");
+            case 200 -> ResponseEntity.ok().body("성공적으로 수정되었습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
 

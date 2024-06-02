@@ -18,7 +18,7 @@ public class TransportationController {
     private final TransportationService transportationService;
 
     @GetMapping("/getAll")
-    public List<GetTransportDTO> getAll(){
-        return transportationService.getAll();
+    public List<GetTransportDTO> getAllTransportation(){
+        return transportationService.getAllTransportation();
     }
 }

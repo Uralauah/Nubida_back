@@ -15,13 +15,7 @@ import java.util.List;
 public class TransportationService {
     private final TransportationRepository transportationRepository;
 
-//    public void create(TransportationDTO transportationDTO){
-//        Transportation transportation = new Transportation();
-//        transportation.setName(transportationDTO.getName());
-//        transportationRepository.save(transportation);
-//    }
-
-    public List<GetTransportDTO> getAll(){
+    public List<GetTransportDTO> getAllTransportation(){
         List<Transportation> transportationList = transportationRepository.findAll();
         List<GetTransportDTO> result = new ArrayList<>();
         for(Transportation transportation : transportationList){

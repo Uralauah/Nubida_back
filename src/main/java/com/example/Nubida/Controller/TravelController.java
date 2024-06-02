@@ -24,26 +24,18 @@ public class TravelController {
     private final TravelRepository travelRepository;
 
     @PostMapping("/create")
-    public void create(@RequestBody TravelDTO travelDTO, Principal principal) {
-        travelService.create(travelDTO, principal);
+    public void createTravel(@RequestBody TravelDTO travelDTO, Principal principal) {
+        travelService.createTravel(travelDTO, principal);
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam(name = "id") int id) {
-        int result = travelService.delete(id);
-        switch (result) {
-            case -1:
-                return ResponseEntity.badRequest().body("해당 여행이 존재하지 않습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
-    }
-
-    @GetMapping("/see")
-    public Traveler info(Principal principal) {
-        return travelService.info(principal);
+    public ResponseEntity<?> deleteTravel(@RequestParam(name = "id") int id) {
+        int result = travelService.deleteTravel(id);
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("해당 여행이 존재하지 않습니다.");
+            case 200 -> ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
     @GetMapping("/getMyTravel")
@@ -51,30 +43,20 @@ public class TravelController {
         return travelService.getMyTravel(principal);
     }
 
-    @GetMapping("/leaders")
-    public List<Travel> leaders(Principal principal) {
-        return travelService.leaders(principal);
-    }
-
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody Code code, Principal principal) {
-        System.out.println(code.getCode());
-        int result = travelService.join(code.getCode(), principal);
-        switch (result) {
-            case -1:
-                return ResponseEntity.badRequest().body("존재하지 않는 코드입니다.");
-            case -2:
-                return ResponseEntity.badRequest().body("이미 참가 중인 여행입니다.");
-            case 200:
-                return ResponseEntity.ok().body("여행 참가 성공");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+    public ResponseEntity<?> joinTravel(@RequestBody Code code, Principal principal) {
+        int result = travelService.joinTravel(code.getCode(), principal);
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("존재하지 않는 코드입니다.");
+            case -2 -> ResponseEntity.badRequest().body("사용자 정보를 확인할 수 없습니다.");
+            case -3 -> ResponseEntity.badRequest().body("이미 참가 중인 여행입니다.");
+            case 200 -> ResponseEntity.ok().body("여행 참가 성공");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
     @GetMapping("/getAllTravel")
     public List<Travel> getAllTravel(Principal principal) {
-
         return travelService.getAllTravel(principal);
     }
 
@@ -83,76 +65,28 @@ public class TravelController {
         return travelService.getTravelInfo(id);
     }
 
-    @GetMapping("/getTravelTravler")
-    public List<Traveler> getTravelTravler(@RequestParam(name = "id") long id) {
-        return travelService.getTravelTravler(id);
+    @GetMapping("/getTravelTraveler")
+    public List<Traveler> getTravelTraveler(@RequestParam(name = "id") long id) {
+        return travelService.getTravelTraveler(id);
     }
 
     @PostMapping("/deleteTraveler")
-    public ResponseEntity<?> deleteTraveler(Principal principal, @RequestBody DeleteTravelerDTO deleteTravelerDTO) {
-        int result = travelService.deleteTraveler(principal, deleteTravelerDTO.getTravel_id(), deleteTravelerDTO.getTravel_traveler_id());
-        switch (result) {
-            case -1:
-                return ResponseEntity.badRequest().body("존재하지 않는 여행입니다.");
-            case -2:
-                return ResponseEntity.badRequest().body("사용자를 확인할 수 없습니다.");
-            case -3:
-                return ResponseEntity.badRequest().body("권한을 확인할 수 없습니다.");
-            case -4:
-                return ResponseEntity.badRequest().body("대상자를 확인할 수 없습니다.");
-            case 200:
-                return ResponseEntity.ok().body("정상적으로 삭제되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+    public ResponseEntity<?> deleteTravelTraveler(Principal principal, @RequestBody DeleteTravelerDTO deleteTravelerDTO) {
+        int result = travelService.deleteTravelTraveler(principal, deleteTravelerDTO.getTravel_id(), deleteTravelerDTO.getTravel_traveler_id());
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("존재하지 않는 여행입니다.");
+            case -2 -> ResponseEntity.badRequest().body("사용자를 확인할 수 없습니다.");
+            case -3 -> ResponseEntity.badRequest().body("권한을 확인할 수 없습니다.");
+            case -4 -> ResponseEntity.badRequest().body("대상자를 확인할 수 없습니다.");
+            case 200 -> ResponseEntity.ok().body("정상적으로 삭제되었습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
-    @PostMapping("/supply/create")
-    public ResponseEntity<?> createSupply(@RequestParam(name = "id") int travel_id, @RequestBody SupplyDTO supplyDTO) {
-        int result = travelService.createSupply(travel_id, supplyDTO);
-        switch (result) {
-            case -1:
-                return ResponseEntity.badRequest().body("여행 정보를 확인할 수 없습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 추가되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류가 발생했습니다.");
-        }
-    }
-
-    @GetMapping("/supply/getAll")
-    public List<Supply> getAllSupply(@RequestParam(name = "id") long travel_id) {
-        return travelService.getAllSupply(travel_id);
-    }
-
-    @PostMapping("/supply/check")
-    public void check(@RequestParam(name = "id") long travel_id, @RequestBody SupplyDTO supplyDTO) {
-        travelService.supplyCheck(travel_id, supplyDTO);
-    }
-
-    @PostMapping("/supply/count")
-    public void count(@RequestParam(name = "id") long travel_id, @RequestBody SupplyDTO supplyDTO) {
-        travelService.supplyCount(travel_id, supplyDTO);
-    }
-
-    @PostMapping("/supply/delete")
-    public ResponseEntity<?> delete(@RequestParam(name="id")long travel_id,@RequestBody SupplyDTO supplyDTO){
-        int result = travelService.supplyDelete(travel_id,supplyDTO);
-        switch(result){
-            case -1:
-                return ResponseEntity.badRequest().body("여행을 확인할 수 없습니다.");
-            case -2:
-                return ResponseEntity.badRequest().body("삭제에 오류가 생겼습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
-    }
 
     @GetMapping("/viewReview")
-    public ReviewDTO viewReview(@RequestParam(name="id")long travel_id,Principal principal){
-        return travelService.viewReview(travel_id,principal);
+    public ReviewDTO viewTravelReview(@RequestParam(name="id")long travel_id,Principal principal){
+        return travelService.viewTravelReview(travel_id,principal);
     }
 
     @PostMapping("/addBudget")
@@ -171,32 +105,23 @@ public class TravelController {
     @PostMapping("/addTransport")
     public ResponseEntity<?> addTransport(@RequestParam(name="id")long travel_id, @RequestBody TransportationDTO transportationDTO){
         int result = travelService.addTransportation(travel_id, transportationDTO);
-        switch (result){
-            case -1:
-                return ResponseEntity.badRequest().body("여행을 찾을 수 없습니다.");
-            case -2:
-                return ResponseEntity.badRequest().body("이동수단을 찾을 수 없습니다.");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 추가되었습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("여행을 찾을 수 없습니다.");
+            case -2 -> ResponseEntity.badRequest().body("이동수단을 찾을 수 없습니다.");
+            case 200 -> ResponseEntity.ok().body("성공적으로 추가되었습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 
     @PostMapping("/quitTravel")
     public ResponseEntity<?> quitTravel(@RequestParam(name="id")long travel_id, Principal principal){
         int result = travelService.quitTravel(principal,travel_id);
-        switch (result){
-            case -1:
-                return ResponseEntity.badRequest().body("여행을 확인할 수 없습니다.");
-            case -2:
-                return ResponseEntity.badRequest().body("사용자를 확인할 수 없습니다.");
-            case -3:
-                return ResponseEntity.badRequest().body("알 수 없는 오류 발생");
-            case 200:
-                return ResponseEntity.ok().body("성공적으로 탈퇴하였습니다.");
-            default:
-                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
-        }
+        return switch (result) {
+            case -1 -> ResponseEntity.badRequest().body("여행을 확인할 수 없습니다.");
+            case -2 -> ResponseEntity.badRequest().body("사용자를 확인할 수 없습니다.");
+            case -3 -> ResponseEntity.badRequest().body("알 수 없는 오류 발생");
+            case 200 -> ResponseEntity.ok().body("성공적으로 탈퇴하였습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
     }
 }

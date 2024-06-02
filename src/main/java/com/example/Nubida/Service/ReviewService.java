@@ -82,7 +82,7 @@ public class ReviewService {
         return reviewDTOS;
     }
 
-    public List<ReviewDTO> getAll(Principal principal){
+    public List<ReviewDTO> getAllReviews(Principal principal){
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
         if(ot.isEmpty())
             return null;
@@ -100,7 +100,7 @@ public class ReviewService {
         return reviewDTOS;
     }
 
-    public int delete(Long review_id){
+    public int deleteReview(Long review_id){
         Optional<Review> or = reviewRepository.findById(review_id);
         if(or.isEmpty())
             return -1;
@@ -119,7 +119,7 @@ public class ReviewService {
         return 200;
     }
 
-    public int change(ReviewDTO reviewDTO){
+    public int modifyReview(ReviewDTO reviewDTO){
         Optional<Review> or = reviewRepository.findById(reviewDTO.getId());
         if(or.isEmpty())
             return -1;
@@ -143,7 +143,7 @@ public class ReviewService {
     public void deleteByAuthor(Traveler traveler){
         List<Review> reviews = reviewRepository.findAllByAuthor(traveler);
         for(Review review : reviews){
-            delete(review.getId());
+            deleteReview(review.getId());
         }
     }
 }

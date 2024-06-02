@@ -18,6 +18,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,9 +28,7 @@ public class TravelService {
     private final TravelerRepository travelerRepository;
     private final CountryRepository countryRepository;
     private final TravelTravelerRepository travelTravelerRepository;
-//    private final TravelTravelerService travelTravelerService;
     private final SupplyService supplyService;
-    private final TravelSupplyService travelSupplyService;
     private final TravelSupplyRepository travelSupplyRepository;
     private final SupplyRepository supplyRepository;
     private final TransportationRepository transportationRepository;
@@ -37,7 +36,7 @@ public class TravelService {
     private final TravelPlanRepository travelPlanRepository;
     private final ReviewRepository reviewRepository;
 
-    public Travel create(TravelDTO travelDTO, Principal principal) {
+    public void createTravel(TravelDTO travelDTO, Principal principal) {
         Travel travel = new Travel();
 
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
@@ -63,15 +62,13 @@ public class TravelService {
             travel.setDestination(country);
         }
         travelRepository.save(travel);
-//        travelTravelerService.join(travel, traveler);
         TravelTraveler travelTraveler = new TravelTraveler();
         travelTraveler.setTraveler(traveler);
         travelTraveler.setTravel(travel);
         travelTravelerRepository.save(travelTraveler);
-        return travel;
     }
 
-    public int delete(long id){
+    public int deleteTravel(long id){
         Optional<Travel> ot = travelRepository.findById(id);
         if(ot.isEmpty())
             return -1;
@@ -88,7 +85,7 @@ public class TravelService {
         return 200;
     }
 
-    public int join(String code, Principal principal) { //이미 참가중인 여행인지 확인하는 작업 추가하기
+    public int joinTravel(String code, Principal principal) {
         System.out.println(code);
         Optional<Travel> ot = travelRepository.findByCode(code);
         if (ot.isEmpty()) {
@@ -96,12 +93,14 @@ public class TravelService {
         }
         Travel travel = ot.get();
         Optional<Traveler> optionalTraveler = travelerRepository.findByUsername(principal.getName());
+        if(optionalTraveler.isEmpty())
+            return -2;
         Traveler traveler = optionalTraveler.get();
 
         List<TravelTraveler> travelTravelerList = travelTravelerRepository.findAllByTravel(travel);
         for (TravelTraveler tt : travelTravelerList) {
-            if (tt.getTraveler().getId() == traveler.getId())
-                return -2;
+            if (Objects.equals(tt.getTraveler().getId(), traveler.getId()))
+                return -3;
         }
 
         travel.setNum_traveler(travel.getNum_traveler() + 1);
@@ -113,14 +112,10 @@ public class TravelService {
         return 200;
     }
 
-    public List<Travel> leaders(Principal principal) {
-        Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
-        Traveler traveler = ot.get();
-        return travelRepository.findAllByLeader(traveler.getId());
-    }
-
     public List<Travel> getMyTravel(Principal principal) {
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
+        if(ot.isEmpty())
+            return null;
         Traveler traveler = ot.get();
 
         List<TravelTraveler> travelTravelerList = travelTravelerRepository.findAllByTravelerId(traveler.getId());
@@ -144,21 +139,13 @@ public class TravelService {
 
     }
 
-    public Traveler info(Principal principal) {
-        Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
-        Traveler traveler = ot.get();
-        System.out.println(traveler.getUsername());
-        return traveler;
-    }
-
     public Travel getTravelInfo( long id) {
-
         Optional<Travel> ot = travelRepository.findById(id);
         return ot.orElse(null);
     }
 
 
-    public List<Traveler> getTravelTravler(long id) {
+    public List<Traveler> getTravelTraveler(long id) {
         Optional<Travel> ot = travelRepository.findById(id);
         if (ot.isEmpty())
             return null;
@@ -171,7 +158,7 @@ public class TravelService {
         return travelers;
     }
 
-    public int deleteTraveler(Principal principal, long travel_id, long travel_traveler_id) {
+    public int deleteTravelTraveler(Principal principal, long travel_id, long travel_traveler_id) {
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if (ot.isEmpty())
             return -1;
@@ -180,7 +167,7 @@ public class TravelService {
         if (otr.isEmpty())
             return -2;
         Traveler leader = otr.get();
-        if (travel.getLeader() != leader.getId()) {
+        if (!Objects.equals(travel.getLeader(), leader.getId())) {
             return -3;
         }
         List<TravelTraveler> dotr = travelTravelerRepository.findAllByTravelerId(travel_traveler_id);
@@ -188,7 +175,7 @@ public class TravelService {
             return -4;
         TravelTraveler travelTraveler;
         for (TravelTraveler tt : dotr) {
-            if (tt.getTravel().getId() == travel.getId()) {
+            if (Objects.equals(tt.getTravel().getId(), travel.getId())) {
                 travelTraveler = tt;
                 travelTravelerRepository.deleteById(travelTraveler.getId());
                 break;
@@ -206,43 +193,20 @@ public class TravelService {
             return -1;
         Travel travel = ot.get();
         Supply supply = supplyService.createSupply(supplyDTO);
-        travelSupplyService.create(travel,supply);
+        TravelSupply travelSupply = new TravelSupply();
+        travelSupply.setTravel(travel);
+        travelSupply.setSupply(supply);
+        travelSupplyRepository.save(travelSupply);
         return 200;
     }
 
-    public List<Supply> getAllSupply(long travel_id){
+    public List<Supply> getAllTravelSupply(long travel_id){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return null;
         Travel travel = ot.get();
         List<TravelSupply> travelSupplies = travelSupplyRepository.findAllByTravel(travel);
         return supplyService.getAllSupply(travelSupplies);
-    }
-
-    public void supplyCheck(long travel_id, SupplyDTO supplyDTO){
-        Optional<Travel> ot = travelRepository.findById(travel_id);
-        if(ot.isEmpty())
-            return;
-        Travel travel = ot.get();
-        Optional<Supply> os = supplyRepository.findByName(supplyDTO.getName());
-        if (os.isEmpty())
-            return;
-        Supply supply = os.get();
-        supply.setCheck(supplyDTO.isCheck());
-        supplyRepository.save(supply);
-    }
-
-    public void supplyCount(long travel_id, SupplyDTO supplyDTO){
-        Optional<Travel> ot = travelRepository.findById(travel_id);
-        if(ot.isEmpty())
-            return;
-        Travel travel = ot.get();
-        Optional<Supply> os = supplyRepository.findByName(supplyDTO.getName());
-        if(os.isEmpty())
-            return;
-        Supply supply = os.get();
-        supply.setCount(supply.getCount()+supplyDTO.getCount());
-        supplyRepository.save(supply);
     }
 
     public int supplyDelete(long travel_id, SupplyDTO supplyDTO){
@@ -262,7 +226,7 @@ public class TravelService {
         return -2;
     }
 
-    public ReviewDTO viewReview(long travel_id,Principal principal){
+    public ReviewDTO viewTravelReview(long travel_id,Principal principal){
         Optional<Traveler> ott = travelerRepository.findByUsername(principal.getName());
         if(ott.isEmpty())
             return null;
@@ -273,7 +237,7 @@ public class TravelService {
         Traveler traveler = ott.get();
         List<Review> reviews = reviewRepository.findAllByAuthor(traveler);
         for(Review review : reviews){
-            if(review.getTravel().getId()==travel.getId()){
+            if(Objects.equals(review.getTravel().getId(), travel.getId())){
                 ReviewDTO reviewDTO = new ReviewDTO();
                 reviewDTO.setContent(review.getContent());
                 reviewDTO.setSubject(review.getSubject());
@@ -328,7 +292,7 @@ public class TravelService {
         List<TravelTraveler> travelTravelers = travelTravelerRepository.findAllByTraveler(traveler);
 
         for(TravelTraveler travelTraveler : travelTravelers){
-            if(travelTraveler.getTravel().getId() == travel.getId()){
+            if(Objects.equals(travelTraveler.getTravel().getId(), travel.getId())){
                 travelTravelerRepository.delete(travelTraveler);
                 return 200;
             }

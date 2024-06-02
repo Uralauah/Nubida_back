@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +24,7 @@ public class CountryService {
     private final TravelRepository travelRepository;
     private final ReviewRepository reviewRepository;
     private final TravelService travelService;
-    public int create(CountryDTO countryDTO){
+    public int createCountry(CountryDTO countryDTO){
         Optional<Country> optionalCountry = countryRepository.findByName(countryDTO.getName());
         if(optionalCountry.isPresent())
             return -1;
@@ -38,7 +36,7 @@ public class CountryService {
         return 200;
     }
 
-    public List<Country> allCountry(){
+    public List<Country> getAllCountry(){
         return countryRepository.findAll();
     }
 
@@ -68,14 +66,14 @@ public class CountryService {
         return recommendCountryDTOS;
     }
 
-    public int delete(CountryDTO countryDTO){
+    public int deleteCountry(CountryDTO countryDTO){
         Optional<Country> oc = countryRepository.findByName(countryDTO.getName());
         if(oc.isEmpty())
             return -1;
         Country country = oc.get();
         List<Travel> travels = travelRepository.findAllByDestination(country);
         for(Travel travel : travels){
-            travelService.delete(travel.getId());
+            travelService.deleteTravel(travel.getId());
         }
         List<CountryReview> countryReviews = countryReviewRepository.findAllByCountry(country);
         for(CountryReview countryReview : countryReviews){
