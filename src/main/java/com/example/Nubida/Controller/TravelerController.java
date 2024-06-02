@@ -17,10 +17,6 @@ import java.util.List;
 public class TravelerController {
     private final TravelerService travelerService;
 
-    //    @PostMapping("/register")
-//    public int create( TravelerDTO travelerDTO){
-//        return travelerService.create(travelerDTO);
-//    }
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody TravelerDTO travelerDTO) {
         System.out.println(travelerDTO.getUsername());
@@ -47,9 +43,9 @@ public class TravelerController {
         return travelerService.getAllTraveler(principal);
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody TravelerDTO travelerDTO){
-        int result = travelerService.delete(travelerDTO);
+    @PostMapping("/deleteTraveler")
+    public ResponseEntity<?> deleteTraveler(@RequestBody TravelerDTO travelerDTO){
+        int result = travelerService.deleteTraveler(travelerDTO);
         switch (result){
             case -1:
                 return ResponseEntity.badRequest().body("여행자 정보를 확인할 수 없습니다.");

@@ -57,7 +57,7 @@ public class TravelerService {
         return travelerRepository.findAll();
     }
 
-    public int delete(TravelerDTO travelerDTO){
+    public int deleteTraveler(TravelerDTO travelerDTO){
         Optional<Traveler> ot = travelerRepository.findByUsername(travelerDTO.getUsername());
         if(ot.isEmpty())
             return -1;

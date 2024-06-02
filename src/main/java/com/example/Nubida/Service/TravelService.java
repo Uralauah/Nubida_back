@@ -151,14 +151,14 @@ public class TravelService {
         return traveler;
     }
 
-    public Travel allInfo( long id) {
+    public Travel getTravelInfo( long id) {
 
         Optional<Travel> ot = travelRepository.findById(id);
         return ot.orElse(null);
     }
 
 
-    public List<Traveler> viewTravelTraveler(long id) {
+    public List<Traveler> getTravelTravler(long id) {
         Optional<Travel> ot = travelRepository.findById(id);
         if (ot.isEmpty())
             return null;
@@ -198,15 +198,6 @@ public class TravelService {
         travelRepository.save(travel);
 
         return 200;
-    }
-
-    public void setNum(long id, int num) {
-        Optional<Travel> ot = travelRepository.findById(id);
-        if (ot.isEmpty())
-            return;
-        Travel travel = ot.get();
-        travel.setNum_traveler(travel.getNum_traveler() + num);
-        travelRepository.save(travel);
     }
 
     public int createSupply(long travel_id, SupplyDTO supplyDTO) {
@@ -324,7 +315,7 @@ public class TravelService {
         return 200;
     }
 
-    public int quit(Principal principal, long travel_id){
+    public int quitTravel(Principal principal, long travel_id){
         Optional<Travel> ot = travelRepository.findById(travel_id);
         if(ot.isEmpty())
             return -1;

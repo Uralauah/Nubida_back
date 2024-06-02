@@ -14,8 +14,8 @@ public class Supply {
 
     private String name;
 
-    private int count;
+    private Integer count;
 
     @Column(name = "`check`", columnDefinition = "TINYINT(1)")
-    private boolean check;
+    private Boolean check;
 }

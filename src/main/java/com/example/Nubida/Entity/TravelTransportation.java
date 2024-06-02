@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class TravelTransportation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="travel_id")
@@ -22,7 +22,7 @@ public class TravelTransportation {
     @JoinColumn(name = "transportation_id")
     private Transportation transportation;
 
-    private long cost;
+    private Long cost;
 
     private LocalDateTime start_date;
     private LocalDateTime finish_date;

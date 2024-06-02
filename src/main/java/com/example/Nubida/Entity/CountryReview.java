@@ -10,7 +10,7 @@ import lombok.Setter;
 public class CountryReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="country_id")

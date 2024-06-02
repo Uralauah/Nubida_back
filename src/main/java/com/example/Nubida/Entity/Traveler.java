@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Traveler {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(unique = true)
     private String nickname;
@@ -25,7 +25,4 @@ public class Traveler {
 
 
     private String role;
-
-//    @OneToMany(mappedBy = "traveler")
-//    private List<TravelTraveler> travelList = new ArrayList<>();
 }

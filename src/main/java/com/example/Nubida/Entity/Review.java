@@ -10,13 +10,13 @@ import lombok.Setter;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String subject;
 
     private String content;
 
-    private double rate;
+    private Double rate;
 
     @ManyToOne
     private Traveler author;

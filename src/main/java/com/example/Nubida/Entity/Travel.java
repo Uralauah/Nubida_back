@@ -14,26 +14,23 @@ import java.time.LocalDate;
 public class Travel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(length = 20)
     private String name;
 
     @Column(columnDefinition = "bigint default 0",nullable = false)
-    private long budget_won;
+    private Long budget_won;
 
     @Column(columnDefinition = "double default 0",nullable = false)
-    private long remain_budget;
+    private Long remain_budget;
 
-    private long leader;
+    private Long leader;
 
     private String code;
 
     @Column(columnDefinition = "int default 1",nullable = false)
-    private int num_traveler;
-
-//    @OneToMany(mappedBy = "travel")
-//    private List<TravelTraveler> travelerList = new ArrayList<>();
+    private Integer num_traveler;
 
     @ManyToOne
     @JoinColumn(name="country_id")
@@ -44,5 +41,5 @@ public class Travel {
     private LocalDate return_date;
 
     @Column(name = "review", columnDefinition = "TINYINT(1)")
-    private boolean review;
+    private Boolean review;
 }

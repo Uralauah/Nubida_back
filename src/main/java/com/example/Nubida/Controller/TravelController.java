@@ -78,15 +78,14 @@ public class TravelController {
         return travelService.getAllTravel(principal);
     }
 
-    @GetMapping("/allInfo")
-    public Travel allInfo(@RequestParam(name = "id") long id) {
-
-        return travelService.allInfo(id);
+    @GetMapping("/getTravelInfo")
+    public Travel getTravelInfo(@RequestParam(name = "id") long id) {
+        return travelService.getTravelInfo(id);
     }
 
-    @GetMapping("/traveler")
-    public List<Traveler> viewTravelTravler(@RequestParam(name = "id") long id) {
-        return travelService.viewTravelTraveler(id);
+    @GetMapping("/getTravelTravler")
+    public List<Traveler> getTravelTravler(@RequestParam(name = "id") long id) {
+        return travelService.getTravelTravler(id);
     }
 
     @PostMapping("/deleteTraveler")
@@ -108,12 +107,6 @@ public class TravelController {
         }
     }
 
-    @PostMapping("/setNum")
-    public void setNum(@RequestParam(name = "id") long id, @RequestParam(name = "num") int num) {
-        travelService.setNum(id, num);
-
-    }
-
     @PostMapping("/supply/create")
     public ResponseEntity<?> createSupply(@RequestParam(name = "id") int travel_id, @RequestBody SupplyDTO supplyDTO) {
         int result = travelService.createSupply(travel_id, supplyDTO);
@@ -124,7 +117,6 @@ public class TravelController {
                 return ResponseEntity.ok().body("성공적으로 추가되었습니다.");
             default:
                 return ResponseEntity.internalServerError().body("알 수 없는 오류가 발생했습니다.");
-
         }
     }
 
@@ -163,8 +155,8 @@ public class TravelController {
         return travelService.viewReview(travel_id,principal);
     }
 
-    @PostMapping("/budget")
-    public ResponseEntity<?> budget(@RequestParam(name="id")long travel_id,@RequestBody BudgetDTO budget){
+    @PostMapping("/addBudget")
+    public ResponseEntity<?> addBudget(@RequestParam(name="id")long travel_id,@RequestBody BudgetDTO budget){
         int result = travelService.addBudget(travel_id, budget);
         switch (result){
             case -1:
@@ -191,9 +183,9 @@ public class TravelController {
         }
     }
 
-    @PostMapping("/quit")
-    public ResponseEntity<?> quit(@RequestParam(name="id")long travel_id, Principal principal){
-        int result = travelService.quit(principal,travel_id);
+    @PostMapping("/quitTravel")
+    public ResponseEntity<?> quitTravel(@RequestParam(name="id")long travel_id, Principal principal){
+        int result = travelService.quitTravel(principal,travel_id);
         switch (result){
             case -1:
                 return ResponseEntity.badRequest().body("여행을 확인할 수 없습니다.");
