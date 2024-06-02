@@ -119,7 +119,7 @@ public class TravelService {
         return travelRepository.findAllByLeader(traveler.getId());
     }
 
-    public List<Travel> allTravel(Principal principal) {
+    public List<Travel> getMyTravel(Principal principal) {
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
         Traveler traveler = ot.get();
 
@@ -132,7 +132,7 @@ public class TravelService {
         return travels;
     }
 
-    public List<Travel> adminTravel(Principal principal) {
+    public List<Travel> getAllTravel(Principal principal) {
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
 
         Traveler Admin = ot.get();

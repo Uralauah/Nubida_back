@@ -46,9 +46,9 @@ public class TravelController {
         return travelService.info(principal);
     }
 
-    @GetMapping("/allTravel")
-    public List<Travel> allTravel(Principal principal) {
-        return travelService.allTravel(principal);
+    @GetMapping("/getMyTravel")
+    public List<Travel> getMyTravel(Principal principal) {
+        return travelService.getMyTravel(principal);
     }
 
     @GetMapping("/leaders")
@@ -72,10 +72,10 @@ public class TravelController {
         }
     }
 
-    @GetMapping("/adminTravel")
-    public List<Travel> adminTravel(Principal principal) {
+    @GetMapping("/getAllTravel")
+    public List<Travel> getAllTravel(Principal principal) {
 
-        return travelService.adminTravel(principal);
+        return travelService.getAllTravel(principal);
     }
 
     @GetMapping("/allInfo")
