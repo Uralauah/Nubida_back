@@ -22,6 +22,19 @@ public class ReviewController {
         return reviewService.getAll(principal);
     }
 
+    @PostMapping("/addReview")
+    public ResponseEntity<?> addReview(@RequestParam(name = "id") int id, @RequestBody ReviewDTO reviewDTO,Principal principal) {
+        int result = reviewService.addReview(id, reviewDTO,principal);
+        switch (result) {
+            case -1:
+                return ResponseEntity.badRequest().body("해당 국가를 찾을 수 없습니다.");
+            case 200:
+                return ResponseEntity.ok().body("성공적으로 추가되었습니다.");
+            default:
+                return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        }
+    }
+
     @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody ReviewDTO reviewDTO){
         int result = reviewService.delete(reviewDTO.getId());
@@ -49,4 +62,6 @@ public class ReviewController {
                 return ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
         }
     }
+
+
 }

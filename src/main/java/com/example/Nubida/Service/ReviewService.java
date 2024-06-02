@@ -41,6 +41,32 @@ public class ReviewService {
         return review;
     }
 
+    public int addReview(long id, ReviewDTO reviewDTO, Principal principal){
+        Review review = create(reviewDTO,principal,id);
+        Optional<Travel>ot = travelRepository.findById(id);
+        if(ot.isEmpty())
+            return -2;
+        Travel travel = ot.get();
+        long country_id = travel.getDestination().getId();
+        Optional<Country> oc = countryRepository.findById(country_id);
+        if(oc.isEmpty())
+            return -1;
+        Country country = oc.get();
+        double rate = country.getRate()*country.getReview_cnt();
+        rate = (rate + review.getRate())/(country.getReview_cnt()+1);
+        country.setReview_cnt(country.getReview_cnt()+1);
+        country.setRate(rate);
+
+        CountryReview countryReview = new CountryReview();
+        countryReview.setCountry(country);
+        countryReview.setReview(review);
+
+        travel.setReview(true);
+        travelRepository.save(travel);
+        countryReviewRepository.save(countryReview);
+        return 200;
+    }
+
     public List<ReviewDTO> getRecentReviews(long country_id){
         Pageable pageable = PageRequest.of(0,5);
         List<CountryReview> countryReviews = countryReviewRepository.findRecentReview(country_id,pageable);
@@ -111,6 +137,8 @@ public class ReviewService {
         countryRepository.save(country);
         return 200;
     }
+
+
 
     public void deleteByAuthor(Traveler traveler){
         List<Review> reviews = reviewRepository.findAllByAuthor(traveler);
