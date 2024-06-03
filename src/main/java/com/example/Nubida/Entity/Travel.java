@@ -41,5 +41,5 @@ public class Travel {
     private LocalDate return_date;
 
     @Column(name = "review", columnDefinition = "TINYINT(1)")
-    private Boolean review;
+    private Boolean isReview;
 }

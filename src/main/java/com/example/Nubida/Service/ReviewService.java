@@ -61,7 +61,7 @@ public class ReviewService {
         countryReview.setCountry(country);
         countryReview.setReview(review);
 
-        travel.setReview(true);
+        travel.setIsReview(true);
         travelRepository.save(travel);
         countryReviewRepository.save(countryReview);
         return 200;
@@ -106,7 +106,7 @@ public class ReviewService {
             return -1;
         Review review = or.get();
         Travel travel = review.getTravel();
-        travel.setReview(false);
+        travel.setIsReview(false);
         Country country = travel.getDestination();
         country.setRate(((country.getRate()*country.getReview_cnt())-review.getRate())/(country.getReview_cnt()-1));
         country.setReview_cnt(country.getReview_cnt() - 1);

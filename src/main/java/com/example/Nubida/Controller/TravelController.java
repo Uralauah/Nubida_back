@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/travel")
 public class TravelController {
     private final TravelService travelService;
-    private final TravelRepository travelRepository;
 
     @PostMapping("/create")
     public void createTravel(@RequestBody TravelDTO travelDTO, Principal principal) {
@@ -29,7 +28,7 @@ public class TravelController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteTravel(@RequestParam(name = "id") int id) {
+    public ResponseEntity<?> deleteTravel(@RequestParam(name = "id") long id) {
         int result = travelService.deleteTravel(id);
         return switch (result) {
             case -1 -> ResponseEntity.badRequest().body("해당 여행이 존재하지 않습니다.");

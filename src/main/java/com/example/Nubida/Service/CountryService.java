@@ -31,7 +31,7 @@ public class CountryService {
         Country country = new Country();
         country.setName(countryDTO.getName());
         country.setMoney_term(countryDTO.getMoney_term());
-        country.setReview_cnt(0);
+        country.setReview_cnt(0L);
         countryRepository.save(country);
         return 200;
     }
@@ -40,8 +40,8 @@ public class CountryService {
         return countryRepository.findAll();
     }
 
-    public Country getCountry(int id){
-        Optional<Country> oc = countryRepository.findById((long)id);
+    public Country getCountry(long id){
+        Optional<Country> oc = countryRepository.findById(id);
         if(oc.isEmpty()){
             return null;
         }

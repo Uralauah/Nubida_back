@@ -16,7 +16,6 @@ public class TravelTraveler {
 
     @ManyToOne
     @JoinColumn(name="traveler_id")
-//    @JsonIgnore
     private Traveler traveler;
 
     @ManyToOne

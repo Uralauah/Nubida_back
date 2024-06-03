@@ -17,7 +17,7 @@ import java.util.List;
 public class PlanController {
     private final PlanService planService;
     @PostMapping("/addPlan")
-    public ResponseEntity<?> addPlan(@RequestParam(name="travel_id") int id, @RequestBody PlanDTO planDTO){
+    public ResponseEntity<?> addPlan(@RequestParam(name="travel_id") long id, @RequestBody PlanDTO planDTO){
         int result = planService.addPlan(id,planDTO);
         switch(result){
             case -1:

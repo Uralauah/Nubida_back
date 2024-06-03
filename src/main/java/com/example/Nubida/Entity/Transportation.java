@@ -13,6 +13,4 @@ public class Transportation {
     private Long id;
 
     private String name;
-
-//    private String icon;
 }

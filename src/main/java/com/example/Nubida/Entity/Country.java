@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(unique = true)
     private String name;
@@ -18,7 +18,7 @@ public class Country {
     private String money_term;
 
     @Column(columnDefinition = "double default 0",nullable = false)
-    private double rate;
+    private Double rate;
 
-    private long review_cnt;
+    private Long review_cnt;
 }

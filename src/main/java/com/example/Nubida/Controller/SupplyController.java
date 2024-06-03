@@ -19,7 +19,7 @@ public class SupplyController {
     private final SupplyService supplyService;
     private final TravelService travelService;
     @PostMapping("/create")
-    public ResponseEntity<?> createSupply(@RequestParam(name = "id") int travel_id, @RequestBody SupplyDTO supplyDTO) {
+    public ResponseEntity<?> createSupply(@RequestParam(name = "id") long travel_id, @RequestBody SupplyDTO supplyDTO) {
         int result = travelService.createSupply(travel_id, supplyDTO);
         return switch (result) {
             case -1 -> ResponseEntity.badRequest().body("여행 정보를 확인할 수 없습니다.");

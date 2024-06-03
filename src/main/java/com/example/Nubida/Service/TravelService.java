@@ -55,7 +55,7 @@ public class TravelService {
         travel.setReturn_date(travelDTO.getReturnDate());
         travel.setBudget_won(travelDTO.getBudget_won());
         travel.setRemain_budget(travelDTO.getBudget_won());
-        travel.setReview(false);
+        travel.setIsReview(false);
         Optional<Country> oc = countryRepository.findByName(travelDTO.getCountry());
         if (oc.isPresent()) {
             Country country = oc.get();

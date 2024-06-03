@@ -22,7 +22,6 @@ import java.util.List;
 @ResponseBody
 public class CountryController {
     private final CountryService countryService;
-    private final ReviewService reviewService;
 
     @PostMapping("/admin/create")
     public ResponseEntity<?> createCountry(@RequestBody CountryDTO countryDTO) {
