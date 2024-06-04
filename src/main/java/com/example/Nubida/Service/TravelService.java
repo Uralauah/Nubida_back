@@ -86,7 +86,6 @@ public class TravelService {
     }
 
     public int joinTravel(String code, Principal principal) {
-        System.out.println(code);
         Optional<Travel> ot = travelRepository.findByCode(code);
         if (ot.isEmpty()) {
             return -1;
@@ -129,7 +128,8 @@ public class TravelService {
 
     public List<Travel> getAllTravel(Principal principal) {
         Optional<Traveler> ot = travelerRepository.findByUsername(principal.getName());
-
+        if(ot.isEmpty())
+            return null;
         Traveler Admin = ot.get();
         if (Admin.getRole().equals("ROLE_ADMIN")) {
             return travelRepository.findAll();
@@ -298,5 +298,29 @@ public class TravelService {
             }
         }
         return -3;
+    }
+
+    public int deleteTransport(long travelId, TransportationDTO transportationDTO) {
+        Optional<Travel> ot = travelRepository.findById(travelId);
+        if (ot.isEmpty()) {
+            return -1;
+        }
+
+        Travel travel = ot.get();
+        List<TravelTransportation> travelTransportations = travelTransportationRepository.findAllByTravel(travel);
+
+        for (TravelTransportation travelTransportation : travelTransportations) {
+            if (isMatchingTransportation(travelTransportation, transportationDTO)) {
+                travelTransportationRepository.delete(travelTransportation);
+                return 200;
+            }
+        }
+        return -2;
+    }
+
+    private boolean isMatchingTransportation(TravelTransportation travelTransportation, TransportationDTO transportationDTO) {
+        return travelTransportation.getTransportation().getId().equals(transportationDTO.getTransportation_id()) &&
+                travelTransportation.getStart_date().equals(transportationDTO.getStart_date()) &&
+                travelTransportation.getFinish_date().equals(transportationDTO.getFinish_date());
     }
 }

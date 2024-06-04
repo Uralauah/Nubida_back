@@ -1,10 +1,8 @@
 package com.example.Nubida.Controller;
 
 import com.example.Nubida.DTO.*;
-import com.example.Nubida.Entity.Supply;
 import com.example.Nubida.Entity.Travel;
 import com.example.Nubida.DTO.TravelDTO;
-import com.example.Nubida.Repository.TravelRepository;
 import com.example.Nubida.Service.TravelService;
 import com.example.Nubida.Entity.Traveler;
 import lombok.RequiredArgsConstructor;
@@ -120,6 +118,17 @@ public class TravelController {
             case -2 -> ResponseEntity.badRequest().body("사용자를 확인할 수 없습니다.");
             case -3 -> ResponseEntity.badRequest().body("알 수 없는 오류 발생");
             case 200 -> ResponseEntity.ok().body("성공적으로 탈퇴하였습니다.");
+            default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
+        };
+    }
+
+    @PostMapping("/deleteTransport")
+    public ResponseEntity<?> deleteTransport(@RequestParam(name="id")long travel_id, TransportationDTO transportationDTO){
+        int result = travelService.deleteTransport(travel_id,transportationDTO);
+        return switch (result){
+            case -1 -> ResponseEntity.badRequest().body("여행을 확인할 수 없습니다.");
+            case -2 -> ResponseEntity.badRequest().body("이동수단을 삭제할 수 없습니다.");
+            case 200 -> ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
             default -> ResponseEntity.internalServerError().body("알 수 없는 오류 발생");
         };
     }

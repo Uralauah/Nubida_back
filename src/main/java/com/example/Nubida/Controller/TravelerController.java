@@ -19,7 +19,6 @@ public class TravelerController {
 
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody TravelerDTO travelerDTO) {
-        System.out.println(travelerDTO.getUsername());
         int result = travelerService.create(travelerDTO);
         switch (result) {
             case -1:

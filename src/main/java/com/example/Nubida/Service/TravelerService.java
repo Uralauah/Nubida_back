@@ -21,9 +21,7 @@ public class TravelerService {
     public int create(TravelerDTO newuser){
         Traveler traveler = new Traveler();
         Optional<Traveler> ot = this.travelerRepository.findByUsername(newuser.getUsername());
-        System.out.println(newuser.getUsername());
         if(ot.isPresent()) {
-            System.out.println("haha");
             return -1;
         }
         ot = this.travelerRepository.findByNickname(newuser.getNickname());
